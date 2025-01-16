@@ -184,6 +184,9 @@ def lambda_handler(event, context):
     ## create dynamodb table if it doesn't exist
     table = create_dynamodb_table(table_name)
 
+    post_to_linkedin(text="FUCK YOU", image_url="some url")
+    return
+
     # Aggregate news items from all feeds
     aggregated_news_items = []
     for feedURL in feed_urls:
