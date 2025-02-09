@@ -1,9 +1,8 @@
 import json
 import os
-import boto3
+import time
 import tweepy
 import logging
-from botocore.exceptions import ClientError
 from aws_functions import get_secret
 
 logging.basicConfig(
@@ -13,25 +12,43 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-def post_tweet(tweet_text):
-    try:
-        bearer = os.environ['X_BearerToken']
-        api = os.environ['X_APIKey']
-        api_secret = os.environ['X_APIKeySecret']
-        access = os.environ['X_AccessToken']
-        secret = os.environ['X_AccessTokenSecret']
 
-        logger.info(f"attempting to initialise client with {bearer}")
+def post_tweet(tweet_text, max_retries=3):
+    for attempt in range(max_retries):
+        try:
+            bearer = os.environ['X_BearerToken']
+            api = os.environ['X_APIKey']
+            api_secret = os.environ['X_APIKeySecret']
+            access = os.environ['X_AccessToken']
+            secret = os.environ['X_AccessTokenSecret']
 
-        client = tweepy.Client(bearer_token=bearer, access_token=access, access_token_secret=secret, consumer_key=api, consumer_secret=api_secret)
+            client = tweepy.Client(
+                bearer_token=bearer,
+                access_token=access,
+                access_token_secret=secret,
+                consumer_key=api,
+                consumer_secret=api_secret
+            )
 
-        logger.info(f"attempting to post tweet {tweet_text}")
-        tweet = client.create_tweet(text=tweet_text)
+            tweet = client.create_tweet(text=tweet_text)
+            logger.info(f"Tweet posted successfully: {tweet.data['id']}")
+            return True
 
-        print(f"Successfully posted tweet with ID: {tweet.data['id']}")
-        #print(f"Tweet posted successfully: {response.text}")
-    except tweepy.TweepyException as e:
-        print(f"Failed to post tweet: {e}")
+        except tweepy.TooManyRequests:
+            if attempt == max_retries - 1:
+                logger.error("Rate limit exceeded, max retries reached")
+                raise
+            time.sleep(60)  # Wait before retry
+
+        except tweepy.Unauthorized:
+            logger.error("Authentication failed - check credentials")
+            raise
+
+        except tweepy.TweepyException as e:
+            logger.error(f"Tweet failed: {e}")
+            raise
+
+    return False
 
 def setup_twitter_vars():
     secret = get_secret(secret_name = "TwitterAPICredentials")

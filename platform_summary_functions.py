@@ -2,9 +2,8 @@ import json
 import boto3
 
 def _format_news_items(news_items):
-    """Helper function to format news items consistently"""
     return "\n\n".join(
-        f"Item {i + 1}:\nText: {item['text']}\nImage: {item['image_url']}"
+        f"Item {i + 1}:\nText: {item.text}\nImage: {item.image_url}"
         for i, item in enumerate(news_items)
     )
 
@@ -74,41 +73,22 @@ def get_linkedin_post(news_items):
 
 
 def get_x_post(news_items):
-    """Generate a structured thread of tweets summarizing news items."""
     prompt = """Create a thread of tweets summarizing these automotive news items where:
     - Each tweet must be under 280 characters, including spaces and hashtags.
     - Focus only on concrete facts and developments.
     - Avoid meta-references (e.g., "the report states" or "according to").
-    - Ensure a professional and engaging tone, avoiding casual phrases like "Let me know if you need any other details."
+    - Ensure a professional and engaging tone.
     - Each tweet must stand alone as a concise summary.
 
-    Format the output as an array of JSON objects, where each object contains:
-    {{
-      "tweet": "[Tweet content]"
-    }}
-
-    Use this format strictly:
+    Format the output as an array of JSON objects, with double quotes, like:
     [
-      {{"tweet": "First tweet content here."}},
-      {{"tweet": "Second tweet content here."}},
-      {{"tweet": "Third tweet content here."}},
-      ...
+      {"tweet": "First tweet content here."},
+      {"tweet": "Second tweet content here."},
+      {"tweet": "Third tweet content here."}
     ]
+    """
 
-    Summarize the news items as follows:
-    - Highlight major announcements or launches (e.g., new car models, EV updates).
-    - Emphasize key data points (e.g., range, performance, pricing).
-    - Include up to 2 relevant hashtags in each tweet, integrated naturally.
-
-    Here are the news items:
-    {}
-
-    Output strictly as an array of JSON objects with no additional text or explanations."""
-
-    # Format news items
     content = f"{prompt}\n\nNews items:\n{_format_news_items(news_items)}"
-
-    # Call Claude summarization
     return get_claude_summary(content)
 
 
@@ -138,25 +118,24 @@ def get_facebook_post(news_items):
 def get_instagram_post(news_items):
     """Generate an Instagram-optimized post"""
     prompt = """Create an Instagram post version of these automotive news items that:
-   - Begins with an attention-grabbing first line that's visible in feed
-   - Focuses on concrete facts and developments
-   - Uses emojis effectively
-   - Avoids meta-references
+    - Uses attention-grabbing opening
+    - Includes emojis strategically
+    - Focuses on key facts and developments
 
-   Format exactly as:
-   FIRST LINE: [Strong attention-grabbing opening]
+    Output in valid JSON format as:
+    {
+        "Text": "[Opening line]\\n\\n[Main points with emojis]\\n\\n[Call to action]",
+        "Image": "[URL]",
+        "Hashtags": "[30 relevant hashtags grouped by theme]"
+    }
+    """
 
-   MAIN TEXT:
-   [3-4 key points with emojis and spacing between each]
+    formatted_items = "\n\n".join(
+        f"Item {i + 1}:\nText: {item.text}\nImage: {item.image_url}"
+        for i, item in enumerate(news_items)
+    )
 
-   CLOSING: [Engaging call to action]
-
-   FIRST COMMENT:
-   [Up to 30 relevant hashtags grouped by theme]
-
-   RECOMMENDED IMAGE: [URL and visual impact reasoning]"""
-
-    content = f"{prompt}\n\nNews items:\n{_format_news_items(news_items)}"
+    content = f"{prompt}\n\nNews items:\n{formatted_items}"
     return get_claude_summary(content)
 
 
@@ -211,7 +190,7 @@ def get_social_media_summaries(news_items):
 
     # Format news items with their images
     formatted_items = "\n\n".join(
-        f"Item {i + 1}:\nText: {item['text']}\nImage: {item['image_url']}"
+        f"Item {i + 1}:\nText: {item.text}\nImage: {item.image_url}"
         for i, item in enumerate(news_items)
     )
 
