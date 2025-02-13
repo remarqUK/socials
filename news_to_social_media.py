@@ -135,8 +135,8 @@ class SocialMediaService:
         instagram_content = json.loads(psf.get_instagram_post(news_items))
 
         # Post to each platform
-        # results['facebook'] = self.post_to_facebook(facebook_content)
-        # results['twitter'] = self.post_to_twitter(twitter_content)
+        results['facebook'] = self.post_to_facebook(facebook_content)
+        results['twitter'] = self.post_to_twitter(twitter_content)
         results['instagram'] = self.post_to_instagram(instagram_content)
 
         # Store summary in DynamoDB

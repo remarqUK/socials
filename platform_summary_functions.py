@@ -118,24 +118,35 @@ def get_facebook_post(news_items):
 def get_instagram_post(news_items):
     """Generate an Instagram-optimized post"""
     prompt = """Create an Instagram post version of these automotive news items that:
-    - Uses attention-grabbing opening
-    - Includes emojis strategically
-    - Focuses on key facts and developments
+    - Places ONE relevant emoji at the START of each news item line
+    - Separates each news item with a line break
+    - Includes a clear opening line with car emoji
+    - Ends with a call-to-action line
+    - Places category tags on final line
+    - Format must follow this exact structure:
+    - Output the result in **valid JSON format** with double quotes for all keys and string values, escaped special characters (e.g., newlines as \\n), and no additional comments or errors.
+    - Ensure the image used is relevant to at least one of the news items
+
+    [Opening line with car emoji]
+
+    [emoji] [News item 1]
+    [emoji] [News item 2]
+    [emoji] [News item 3]
+    (etc...)
+
+    [Call to action with checkered flag emoji]
+
+    [Category tags separated by spaces]
 
     Output in valid JSON format as:
     {
-        "Text": "[Opening line]\\n\\n[Main points with emojis]\\n\\n[Call to action]",
+        "Text": "[formatted text as above]",
         "Image": "[URL]",
-        "Hashtags": "[30 relevant hashtags grouped by theme]"
+        "Hashtags": "[8 relevant hashtags grouped by theme]"
     }
     """
 
-    formatted_items = "\n\n".join(
-        f"Item {i + 1}:\nText: {item.text}\nImage: {item.image_url}"
-        for i, item in enumerate(news_items)
-    )
-
-    content = f"{prompt}\n\nNews items:\n{formatted_items}"
+    content = f"{prompt}\n\nNews items:\n{_format_news_items(news_items)}"
     return get_claude_summary(content)
 
 
