@@ -7,10 +7,8 @@ import time
 from typing import List, Dict, Optional
 from dataclasses import dataclass
 import feedparser
-import requests
 from feedparser import FeedParserDict
 
-from aws_functions import get_secret
 from facebook_functions import FacebookClient
 from instagram_functions import InstagramClient
 from linkedin_auth import post_to_linkedin
@@ -84,9 +82,13 @@ class SocialMediaService:
     def post_to_twitter(self, tweets: List[Dict]) -> bool:
         try:
             setup_twitter_vars()
-            for tweet in tweets:
-                post_tweet(tweet_text=tweet['tweet'])
-                time.sleep(random.uniform(60, 180))  # Random delay 1-3 minutes
+
+            # Randomly select one tweet from the list
+            random_tweet = random.choice(tweets)
+
+            # Post just that one tweet
+            post_tweet(tweet_text=random_tweet['tweet'])
+
             return True
         except Exception as e:
             logger.error(f"Twitter posting failed: {e}")
@@ -124,30 +126,69 @@ class SocialMediaService:
     def post_to_all_platforms(self, news_items: List[NewsItem]) -> Dict[str, bool]:
         results = {}
 
-        # Generate all summaries and content first
-        summaries = psf.get_social_media_summaries(news_items)
+        try:
+            # Generate all summaries and content first
+            summaries = psf.get_social_media_summaries(news_items)
 
-        # Generate platform-specific content
-        # linkedin won't work without approval
-        # linkedin_content = json.loads(psf.get_linkedin_post(news_items))
-        facebook_content = json.loads(psf.get_facebook_post(news_items))
-        twitter_content = json.loads(psf.get_x_post(news_items))
-        instagram_content = json.loads(psf.get_instagram_post(news_items))
+            # Generate platform-specific content and handle potential None returns
+            twitter_content_str = psf.get_x_post(news_items)
+            logger.info(f"Twitter content string: {twitter_content_str}")
 
-        # Post to each platform
-        results['facebook'] = self.post_to_facebook(facebook_content)
-        results['twitter'] = self.post_to_twitter(twitter_content)
-        results['instagram'] = self.post_to_instagram(instagram_content)
+            if twitter_content_str:
+                try:
+                    twitter_content = json.loads(twitter_content_str)
+                    results['twitter'] = self.post_to_twitter(twitter_content)
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to parse Twitter content: {e}")
+                    results['twitter'] = False
+            else:
+                logger.error("Failed to generate Twitter content")
+                results['twitter'] = False
 
-        # Store summary in DynamoDB
-        if summaries:
-            summary_str = str(summaries)
-            post_id = hashlib.sha256(summary_str.encode('utf-8')).hexdigest()
-            self.dynamo_service.insert_item(
-                post_date=datetime.datetime.now(datetime.UTC).isoformat(),
-                post_id=post_id,
-                summary=summary_str
-            )
+            facebook_content_str = psf.get_facebook_post(news_items)
+            logger.info(f"Facebook content string: {facebook_content_str}")
+
+            if facebook_content_str:
+                try:
+                    facebook_content = json.loads(facebook_content_str)
+                    results['facebook'] = self.post_to_facebook(facebook_content)
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to parse Facebook content: {e}")
+                    results['facebook'] = False
+            else:
+                logger.error("Failed to generate Facebook content")
+                results['facebook'] = False
+
+            instagram_content_str = psf.get_instagram_post(news_items)
+            logger.info(f"Instagram content string: {instagram_content_str}")
+
+            if instagram_content_str:
+                try:
+                    instagram_content = json.loads(instagram_content_str)
+                    results['instagram'] = self.post_to_instagram(instagram_content)
+                except json.JSONDecodeError as e:
+                    logger.error(f"Failed to parse Instagram content: {e}")
+                    results['instagram'] = False
+            else:
+                logger.error("Failed to generate Instagram content")
+                results['instagram'] = False
+
+            # Store summary in DynamoDB
+            if summaries:
+                summary_str = str(summaries)
+                post_id = hashlib.sha256(summary_str.encode('utf-8')).hexdigest()
+                self.dynamo_service.insert_item(
+                    post_date=datetime.datetime.now(datetime.UTC).isoformat(),
+                    post_id=post_id,
+                    summary=summary_str
+                )
+
+        except Exception as e:
+            logger.error(f"Error in post_to_all_platforms: {str(e)}")
+            # Make sure all platforms have a result, even if it's False
+            for platform in ['facebook', 'twitter', 'instagram']:
+                if platform not in results:
+                    results[platform] = False
 
         return results
 

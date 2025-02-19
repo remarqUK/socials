@@ -2,13 +2,15 @@ import boto3
 import logging
 from typing import Dict, Any
 
+from aws_functions import get_boto3_session
+
 logger = logging.getLogger()
 
 
 class DynamoDBService:
     def __init__(self, table_name: str):
         self.table_name = table_name
-        self.session = boto3.Session(profile_name='tradesales')
+        self.session = get_boto3_session()
         self.create_table_if_not_exists()
 
     def create_table_if_not_exists(self):

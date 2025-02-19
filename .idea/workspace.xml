@@ -5,15 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a96a771-de4c-41b3-96d1-436c7466859d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/dynamo_service.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/instagram_functions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/deploy_lambda.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BAK/news_to_social_media.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/facebook_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/facebook_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/news_to_social_media.py" beforeDir="false" afterPath="$PROJECT_DIR$/news_to_social_media.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/aws_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/aws_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/call_lambda.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/dynamo_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/dynamo_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/news_to_social_media.py" beforeDir="false" afterPath="$PROJECT_DIR$/lambda_function.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/platform_summary_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/platform_summary_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/x_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/x_functions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,14 +40,20 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.news_to_social_media.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "D:/Work/Trading Platform/Project/SocialFeeds/socials"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.news_to_social_media.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;D:/Work/Trading Platform/Project/SocialFeeds/socials&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Work\Trading Platform\Project\SocialFeeds\socials" />
+      <recent name="D:\Work\Trading Platform\Project\SocialFeeds\socials\src" />
+    </key>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
