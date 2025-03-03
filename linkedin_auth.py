@@ -214,11 +214,11 @@ def post_to_linkedin(text: str, image_url: str, secret_name: str = "LinkedInCred
     try:
         # Get user profile ID
         profile_response = requests.get(
-            "https://api.linkedin.com/v2/me",
+            "https://api.linkedin.com/v2/userinfo",
             headers=headers
         )
         profile_response.raise_for_status()
-        author = f"urn:li:person:{profile_response.json()['id']}"
+        author = f"urn:li:organization:104956250"
 
         # Prepare post data
         post_data = {
@@ -229,16 +229,7 @@ def post_to_linkedin(text: str, image_url: str, secret_name: str = "LinkedInCred
                     "shareCommentary": {
                         "text": text
                     },
-                    "shareMediaCategory": "IMAGE",
-                    "media": [
-                        {
-                            "status": "READY",
-                            "description": {
-                                "text": "Image"
-                            },
-                            "media": image_url
-                        }
-                    ]
+                    "shareMediaCategory": "NONE",
                 }
             },
             "visibility": {

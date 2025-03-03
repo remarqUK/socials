@@ -11,8 +11,18 @@ def setup_facebook():
     secret = get_secret(secret_name = "FacebookCredentials")
     secrets = json.loads(secret)
 
+    print(f"SECRETS {secrets}")
+
     user_access_token = secrets['AccessToken']
     graph = facebook.GraphAPI(user_access_token)
+
+    # Refresh long lived access token
+    x1 = graph.extend_access_token(secrets['AppId'], secrets['AppSecret'])
+
+    # PETE SAVE THE NEW TOKEN (X1) BACK TO AWS
+
+    print("X1 ", x1);
+
     pages = graph.get_object("me/accounts")
 
     # Extract the section for 'name': 'Trade Sales'

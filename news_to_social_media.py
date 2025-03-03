@@ -104,88 +104,75 @@ def generate_post_id(post_content: str) -> str:
 
 # Example usage:
 def post_to_social_media(news_items):
-    #setup_facebook()
 
-    # Generate posts for each platform
-    linkedin_content = psf.get_linkedin_post(news_items)
-    #x_content = psf.get_x_post(news_items)
-    #facebook_content = psf.get_facebook_post(news_items)
-    #instagram_content = psf.get_instagram_post(news_items)
-
-    #summaries = psf.get_social_media_summaries(news_items)
-
-    #logger.info(f"X: {x_content}")
-    #x_api = setup_twitter()
-
-    #logger.info(f"Facebook: {facebook_content}")
-
-    # Convert to JSON string
-    #json_string = json.dumps(facebook_content)
-    #print(type(json_string))
-
-    print(linkedin_content)
-
-    # If you need to load it back
-    #loaded_content = json.loads(facebook_content)
-
-    #json_string = json.dumps(linkedin_content)
-    loaded_content = json.loads(linkedin_content)
-
-    # Check the type of the loaded content
-    #print(type(loaded_content))  # Should be <class 'dict'>
-
-    # If it's not a dictionary, you can check the raw content
-
-
-    logger.info(f"Content: {loaded_content}")
-
-    #post_to_facebook(post_text=loaded_content['Text'], image_url=loaded_content['Image'])
-
-    post_to_linkedin(text=loaded_content['Text'], image_url=loaded_content['Image'])
-
-    # setup_twitter_vars()
-    #
-    # tweets = json.loads(x_content)
-    # for tweet in tweets:
-    #     post_tweet(tweet_text=tweet['tweet'])
-
-    # add to dynamo table
-    #
-    # if summary is not None:
-    #     feeds = [{"url": url, "name": f"Feed {i + 1}"} for i, url in enumerate(feed_urls)]
-    #     summary_str = str(summary)
-    #     insert_item_into_table(post_date=datetime.datetime.now(datetime.UTC).isoformat(),
-    #                            post_id=generate_post_id(summary_str), summary=summary_str, metadata=feeds)
-
-    #logger.info(f"Facebook: {facebook_content}")
-
-    # Post to each platform (implementation would depend on your social media APIs)
-    # post_to_linkedin(linkedin_content)
-    # post_to_x(x_content)
-    # post_to_facebook(facebook_content)
-    # post_to_instagram(instagram_content)
+    # x(news_items); # This works
+    facebook(news_items);
+    linkedin(news_items);
+    instagram(news_items);
+    record_to_dynamodb(news_items)
 
     logger.info("Finished posting to social media")
 
+def x(news_items):
+
+    x_content = psf.get_x_post(news_items)
+    tweets = json.loads(x_content)
+
+    #tweets = [{"tweet": "This is a test tweet"}]
+
+    setup_twitter_vars()
+    tweet = random.choice(tweets)
+    post_tweet(tweet_text=tweet['tweet'])
+
+def facebook(news_items):
+
+  setup_facebook();
+  # facebook_content = psf.get_facebook_post(news_items)
+  facebook_posts = [{'image_url': 'https://media.autoexpress.co.uk/image/private/s--w1hzAwTC--/t_rss_image_w_845/v1562243855/autoexpress/2016/12/selling-cars-107.jpg', 'text': 'Car photography: how to take great pics of your car\n\nFollow our car photography top tips to make your car presentable when selling it on an online marketplace or just showing it of on social media'}, {'image_url': 'https://media.autoexpress.co.uk/image/private/s--EKLqobUt--/t_rss_image_w_845/v1741010593/autoexpress/2025/03/Mercedes-AMG SUV - front 3_4_nq8pjy.jpg', 'text': 'Mercedes-AMG electric super-SUV - pictures\n\nImages of the soon to arrive Mercedes-AMG electric super-SUV'}, {'image_url': 'https://media.autoexpress.co.uk/image/private/s--UwdEnL9V--/t_rss_image_w_845/v1740758822/autoexpress/2025/02/Kia EV6 vs Skoda Enyaq Coupe-13.jpg', 'text': 'Kia EV6 and Skoda Enyaq Coupe - pictures\n\nPictures of the Kia EV6 and Skoda Enyaq Coupe being driven on UK roads. Pictures taken by Auto Express photographer Otis Clay'}]
+  facebook_content = facebook_posts[0]
+
+  post_to_facebook(facebook_content['text'], facebook_content['image_url'])
+
+def linkedin(news_items):
+
+  linkedin_content = psf.get_linkedin_post(news_items)
+  post_to_linkedin(linkedin_content)
+  print(linkedin_content)
+
+def instagram(news_items):
+  # post_to_instagram(instagram_content)
+  return
+
+def record_to_dynamodb(news_items):
+  # add to dynamo table
+  #if summary is not None:
+  #  feeds = [{"url": url, "name": f"Feed {i + 1}"} for i, url in enumerate(feed_urls)]
+  #  summary_str = str(summary)
+  #  insert_item_into_table(post_date=datetime.datetime.now(datetime.UTC).isoformat(),
+  #  post_id=generate_post_id(summary_str), summary=summary_str, metadata=feeds)
+  return
+
 def lambda_handler(event, context):
+
     logger.info(f"Received message : {event}")
 
     # Load credentials from AWS Secrets Manager
-    # secret_name = "LinkedInCredentials"
-    # secrets = json.loads(get_secret(secret_name))
+    #secret_name = "LinkedInCredentials"
+    #secrets = json.loads(get_secret(secret_name))
     #
     # # Perform initial authorization
-    # tokens = perform_initial_auth(
+
+    #tokens = perform_initial_auth(
     #     client_id=secrets['ClientId'],
     #     client_secret=secrets['ClientSecret'],
     #     redirect_uri="http://localhost:8000/callback"
-    # )
+    #)
 
     ## create dynamodb table if it doesn't exist
     table = create_dynamodb_table(table_name)
 
-    post_to_linkedin(text="FUCK YOU", image_url="some url")
-    return
+    ## Test an image
+    # post_to_linkedin(text="Test message", image_url="https://testimages.org/img/testimages_screenshot.jpg")
 
     # Aggregate news items from all feeds
     aggregated_news_items = []
