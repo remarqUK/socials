@@ -74,41 +74,22 @@ def get_linkedin_post(news_items):
 
 
 def get_x_post(news_items):
-    """Generate a structured thread of tweets summarizing news items."""
     prompt = """Create a thread of tweets summarizing these automotive news items where:
     - Each tweet must be under 280 characters, including spaces and hashtags.
     - Focus only on concrete facts and developments.
     - Avoid meta-references (e.g., "the report states" or "according to").
-    - Ensure a professional and engaging tone, avoiding casual phrases like "Let me know if you need any other details."
+    - Ensure a professional and engaging tone.
     - Each tweet must stand alone as a concise summary.
 
-    Format the output as an array of JSON objects, where each object contains:
-    {{
-      "tweet": "[Tweet content]"
-    }}
-
-    Use this format strictly:
+    Format the output as an array of JSON objects, with double quotes, like:
     [
-      {{"tweet": "First tweet content here."}},
-      {{"tweet": "Second tweet content here."}},
-      {{"tweet": "Third tweet content here."}},
-      ...
+      {"tweet": "First tweet content here."},
+      {"tweet": "Second tweet content here."},
+      {"tweet": "Third tweet content here."}
     ]
+    """
 
-    Summarize the news items as follows:
-    - Highlight major announcements or launches (e.g., new car models, EV updates).
-    - Emphasize key data points (e.g., range, performance, pricing).
-    - Include up to 2 relevant hashtags in each tweet, integrated naturally.
-
-    Here are the news items:
-    {}
-
-    Output strictly as an array of JSON objects with no additional text or explanations."""
-
-    # Format news items
     content = f"{prompt}\n\nNews items:\n{_format_news_items(news_items)}"
-
-    # Call Claude summarization
     return get_claude_summary(content)
 
 
@@ -138,23 +119,33 @@ def get_facebook_post(news_items):
 def get_instagram_post(news_items):
     """Generate an Instagram-optimized post"""
     prompt = """Create an Instagram post version of these automotive news items that:
-   - Begins with an attention-grabbing first line that's visible in feed
-   - Focuses on concrete facts and developments
-   - Uses emojis effectively
-   - Avoids meta-references
+    - Places ONE relevant emoji at the START of each news item line
+    - Separates each news item with a line break
+    - Includes a clear opening line with car emoji
+    - Ends with a call-to-action line
+    - Places category tags on final line
+    - Format must follow this exact structure:
+    - Output the result in **valid JSON format** with double quotes for all keys and string values, escaped special characters (e.g., newlines as \\n), and no additional comments or errors.
+    - Ensure the image used is relevant to at least one of the news items
 
-   Format exactly as:
-   FIRST LINE: [Strong attention-grabbing opening]
+    [Opening line with car emoji]
 
-   MAIN TEXT:
-   [3-4 key points with emojis and spacing between each]
+    [emoji] [News item 1]
+    [emoji] [News item 2]
+    [emoji] [News item 3]
+    (etc...)
 
-   CLOSING: [Engaging call to action]
+    [Call to action with checkered flag emoji]
 
-   FIRST COMMENT:
-   [Up to 30 relevant hashtags grouped by theme]
+    [Category tags separated by spaces]
 
-   RECOMMENDED IMAGE: [URL and visual impact reasoning]"""
+    Output in valid JSON format as:
+    {
+        "Text": "[formatted text as above]",
+        "Image": "[URL]",
+        "Hashtags": "[8 relevant hashtags grouped by theme]"
+    }
+    """
 
     content = f"{prompt}\n\nNews items:\n{_format_news_items(news_items)}"
     return get_claude_summary(content)

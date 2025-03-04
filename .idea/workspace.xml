@@ -4,13 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a96a771-de4c-41b3-96d1-436c7466859d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/pythonProject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/pythonProject.iml" afterDir="false" />
+    <list default="true" id="3a96a771-de4c-41b3-96d1-436c7466859d" name="Changes" comment="Socially awkward">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/facebook_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/facebook_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linkedin_auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/linkedin_auth.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/news_to_social_media.py" beforeDir="false" afterPath="$PROJECT_DIR$/news_to_social_media.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/platform_summary_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/platform_summary_functions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -40,12 +38,13 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Python.aws_functions.executor": "Run",
-    "Python.call_lambda.executor": "Debug",
+    "Python.call_lambda.executor": "Run",
     "Python.linkedin_auth.executor": "Run",
     "Python.news_to_social_media.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
-    "last_opened_file_path": "H:/source/repos/socials"
+    "last_opened_file_path": "H:/source/repos/socials",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="RunManager" selected="Python.call_lambda">
@@ -114,37 +113,16 @@
     </task>
     <servers />
   </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Socially awkward" />
+    <option name="LAST_COMMIT_MESSAGE" value="Socially awkward" />
+  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/news_to_social_media.py</url>
-          <line>133</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/facebook_functions.py</url>
-          <line>38</line>
-          <option name="timeStamp" value="23" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/facebook_functions.py</url>
-          <line>41</line>
-          <option name="timeStamp" value="24" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/facebook_functions.py</url>
-          <line>44</line>
-          <option name="timeStamp" value="25" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/news_to_social_media.py</url>
-          <line>131</line>
-          <option name="timeStamp" value="26" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/facebook_functions.py</url>
-          <line>25</line>
+          <line>27</line>
           <option name="timeStamp" value="27" />
         </line-breakpoint>
       </breakpoints>
