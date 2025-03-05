@@ -1,13 +1,18 @@
 import datetime
 import json
+import os
+import string
+import random
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from urllib.parse import urlencode, parse_qs, urlparse
+from urllib.parse import urlencode, parse_qs, urlparse, quote
 import requests
 from aws_functions import get_secret, save_tokens_to_secrets
 
 
 class CallbackHandler(BaseHTTPRequestHandler):
+
     def do_GET(self):
+
         query_components = parse_qs(urlparse(self.path).query)
 
         self.send_response(200)
@@ -20,25 +25,32 @@ class CallbackHandler(BaseHTTPRequestHandler):
         else:
             self.wfile.write(b"Authorization failed! Please try again.")
 
+        # STORE AUTH IN DATABASE
+
 
 class LinkedInAuth:
-    def __init__(self, client_id: str, client_secret: str, redirect_uri: str, token_store: dict = None):
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.redirect_uri = redirect_uri
-        self.access_token = token_store.get('access_token') if token_store else None
-        self.refresh_token = token_store.get('refresh_token') if token_store else None
-        self.token_expiry = token_store.get('token_expiry') if token_store else None
+
+    def __init__(self):
+
+        secret = get_secret(secret_name="LinkedInCredentials")
+        secrets = json.loads(secret)
+
+        self.client_id = secrets['client_id']
+        self.client_secret = secrets['client_secret']
+        self.redirect_uri = secrets['redirect_uri']
+        #self.access_token = secrets['access_token']
+        #self.organisation_urn = secrets['organisation_urn']
+
 
     def get_authorization_url(self) -> str:
         params = {
             'response_type': 'code',
             'client_id': self.client_id,
             'redirect_uri': self.redirect_uri,
-            'scope': 'w_member_social profile email openid',
-            'state': '89675r98ughbsdakjufgiuSSdhiughdhydffs'
+            'scope': 'openid profile email',
+            'state': ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(12))
         }
-        return f"https://www.linkedin.com/oauth/v2/authorization?{urlencode(params)}"
+        return f"https://www.linkedin.com/oauth/v2/authorization?{urlencode(params, quote_via=quote)}"
 
     def handle_callback(self, code: str) -> dict:
         """Exchange authorization code for tokens."""
@@ -186,6 +198,8 @@ def post_to_linkedin(text: str, image_url: str, secret_name: str = "LinkedInCred
         redirect_uri="http://localhost:8000/callback",
         token_store=secrets
     )
+
+    exit(1)
 
     # Check and refresh token if needed
     if not auth.is_token_valid():

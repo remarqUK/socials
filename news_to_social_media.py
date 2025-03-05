@@ -15,7 +15,7 @@ import random
 
 from aws_functions import get_secret
 from facebook_functions import post_to_facebook, setup_facebook, post_to_instagram
-from linkedin_auth import LinkedInAuth, CallbackHandler, post_to_linkedin, perform_initial_auth
+from linkedin_functions import LinkedInAuth
 from x_functions import post_tweet, setup_twitter_vars
 
 logging.basicConfig(
@@ -109,11 +109,17 @@ def generate_post_id(post_content: str) -> str:
 
 # Example usage:
 def post_to_social_media(news_items):
-#    x(news_items); # This works
-#    facebook(news_items)
-    instagram(news_items)
-#    linkedin(news_items)
-#    record_to_dynamodb(news_items)
+    # x(news_items); # This works
+    # facebook(news_items)
+    # instagram(news_items)
+    #linkedin(news_items)
+    # record_to_dynamodb(news_items)
+
+    linkedIn = LinkedInAuth()
+
+    path = linkedIn.get_authorization_url()
+
+    print("PATH ", path)
 
     logger.info("Finished posting to social media")
 
@@ -133,38 +139,31 @@ def facebook(news_items):
     # Filter out news_items that have a blank image_url
     news_items = [item for item in news_items if item['image_url']]
 
-    # facebook_content = psf.get_facebook_post(news_items)
+    facebook_content = psf.get_facebook_post(news_items)
+    facebook_json = json.loads(facebook_content)
 
-
-    facebook_posts = [{
-                          'image_url': 'https://media.autoexpress.co.uk/image/private/s--w1hzAwTC--/t_rss_image_w_845/v1562243855/autoexpress/2016/12/selling-cars-107.jpg',
-                          'text': 'Car photography: how to take great pics of your car\n\nFollow our car photography top tips to make your car presentable when selling it on an online marketplace or just showing it of on social media'},
-                      {
-                          'image_url': 'https://media.autoexpress.co.uk/image/private/s--EKLqobUt--/t_rss_image_w_845/v1741010593/autoexpress/2025/03/Mercedes-AMG SUV - front 3_4_nq8pjy.jpg',
-                          'text': 'Mercedes-AMG electric super-SUV - pictures\n\nImages of the soon to arrive Mercedes-AMG electric super-SUV'},
-                      {
-                          'image_url': 'https://media.autoexpress.co.uk/image/private/s--UwdEnL9V--/t_rss_image_w_845/v1740758822/autoexpress/2025/02/Kia EV6 vs Skoda Enyaq Coupe-13.jpg',
-                          'text': 'Kia EV6 and Skoda Enyaq Coupe - pictures\n\nPictures of the Kia EV6 and Skoda Enyaq Coupe being driven on UK roads. Pictures taken by Auto Express photographer Otis Clay'}]
-    facebook_content = facebook_posts[0]
-
-    post_to_facebook(facebook_content['text'], facebook_content['image_url'])
+    post_to_facebook(facebook_json['text'], facebook_json['image_url'])
 
 
 def linkedin(news_items):
-    linkedin_content = psf.get_linkedin_post(news_items)
-    post_to_linkedin(linkedin_content)
-    print(linkedin_content)
 
+#    linkedin_content = psf.get_linkedin_post(news_items)
+#    linkedin_json = json.loads(linkedin_content)
+
+    linkedin_json =   {
+        "Text": "Unveiling the Latest Automotive Innovations and Trends\n\nThe automotive industry is abuzz with exciting new developments, from cutting-edge electric vehicles to groundbreaking safety technologies. In this post, we delve into some of the most notable recent advancements and insights.\n\nLeading the charge in sustainable mobility, Volvo has opened order books for its highly anticipated ES90 EV, boasting an impressive range of up to 435 miles thanks to next-generation electric vehicle technology. Meanwhile, BMW's latest offering, the 392bhp X3 M50 SUV, showcases a perfect blend of refinement and performance, setting a new benchmark in its segment.\n\nKEY INSIGHTS:\n\n- Used car values saw a modest 0.4% increase in February, reflecting resilient demand\n- EV adoption continues to surge, accounting for a quarter of new car registrations in the UK\n- Fleets are exploring alternative decarbonization solutions like HVO fuel as EV uptake plateaus\n\nAs the industry navigates the transition to electrification, what strategies do you see as most effective for fleets and consumers alike? We welcome your insights and experiences in this dynamic landscape.\n\n#AutomotiveInnovations #EVTrends",
+        "Image": "https://media.autoexpress.co.uk/image/private/s--hZqJKyYZ--/t_rss_image_w_845/v1741186013/autoexpress/2025/03/BMW%20X3%20M50%202025%20UK.jpg",
+    }
+
+    post_to_linkedin(linkedin_json['Text'],  linkedin_json['Image'])
 
 def instagram(news_items):
-
     setup_facebook()
 
     # Filter out news_items that have a blank image_url
     news_items = [item for item in news_items if item['image_url']]
 
     instagram_content = psf.get_instagram_post(news_items)
-
     instagram_json = json.loads(instagram_content)
 
     post_to_instagram(instagram_json['Text'], instagram_json['Image'])
@@ -182,25 +181,15 @@ def record_to_dynamodb(news_items):
 
 
 def lambda_handler(event, context):
+
+    query_params = event.get("queryStringParameters", {}) or {}
+    code = query_params.get("code")
+
+    # This means we have a callback from Linkedin
+    if code:
+        exit()
+
     logger.info(f"Received message : {event}")
-
-    # Load credentials from AWS Secrets Manager
-    # secret_name = "LinkedInCredentials"
-    # secrets = json.loads(get_secret(secret_name))
-    #
-    # # Perform initial authorization
-
-    # tokens = perform_initial_auth(
-    #     client_id=secrets['ClientId'],
-    #     client_secret=secrets['ClientSecret'],
-    #     redirect_uri="http://localhost:8000/callback"
-    # )
-
-    ## create dynamodb table if it doesn't exist
-    table = create_dynamodb_table(table_name)
-
-    ## Test an image
-    # post_to_linkedin(text="Test message", image_url="https://testimages.org/img/testimages_screenshot.jpg")
 
     # Aggregate news items from all feeds
     aggregated_news_items = []

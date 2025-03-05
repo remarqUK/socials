@@ -1,9 +1,7 @@
 import json
 import os
-import boto3
 import tweepy
 import logging
-from botocore.exceptions import ClientError
 from aws_functions import get_secret
 
 logging.basicConfig(
@@ -29,7 +27,6 @@ def post_tweet(tweet_text):
         tweet = client.create_tweet(text=tweet_text)
 
         print(f"Successfully posted tweet with ID: {tweet.data['id']}")
-        #print(f"Tweet posted successfully: {response.text}")
     except tweepy.TweepyException as e:
         print(f"Failed to post tweet: {e}")
 
@@ -44,8 +41,3 @@ def setup_twitter_vars():
     os.environ['X_AccessToken'] = secrets['AccessToken']
     os.environ['X_AccessTokenSecret'] = secrets['AccessTokenSecret']
     os.environ['X_BearerToken'] = secrets['BearerToken']
-
-    # return authenticate_twitter(api_key=secrets['APIKey'],
-    #                      api_key_secret=secrets['APIKeySecret'],
-    #                      access_token=secrets['AccessToken'],
-    #                      access_token_secret=secrets['AccessTokenSecret'])
