@@ -1,21 +1,14 @@
-import json
 import logging
 import hashlib
-import datetime
-import webbrowser
-from http.server import HTTPServer
-
 import feedparser
 import boto3
-import x_functions
-import facebook_functions
-import platform_summary_functions as psf
 from feedparser import FeedParserDict
-import random
 
-from aws_functions import get_secret
+import json
+import platform_summary_functions as psf
+import random
 from facebook_functions import post_to_facebook, setup_facebook, post_to_instagram
-from linkedin_functions import LinkedInAuth
+from linkedin_functions import LinkedInAuth, post_to_linkedin
 from x_functions import post_tweet, setup_twitter_vars
 
 logging.basicConfig(
@@ -109,17 +102,12 @@ def generate_post_id(post_content: str) -> str:
 
 # Example usage:
 def post_to_social_media(news_items):
-    # x(news_items); # This works
-    # facebook(news_items)
-    # instagram(news_items)
-    #linkedin(news_items)
+
+    x(news_items) # This works
+    facebook(news_items)
+    instagram(news_items)
+    # linkedin(news_items)
     # record_to_dynamodb(news_items)
-
-    linkedIn = LinkedInAuth()
-
-    path = linkedIn.get_authorization_url()
-
-    print("PATH ", path)
 
     logger.info("Finished posting to social media")
 
@@ -142,7 +130,7 @@ def facebook(news_items):
     facebook_content = psf.get_facebook_post(news_items)
     facebook_json = json.loads(facebook_content)
 
-    post_to_facebook(facebook_json['text'], facebook_json['image_url'])
+    post_to_facebook(facebook_json['Text'], facebook_json['Image'])
 
 
 def linkedin(news_items):
@@ -184,11 +172,6 @@ def lambda_handler(event, context):
 
     query_params = event.get("queryStringParameters", {}) or {}
     code = query_params.get("code")
-
-    # This means we have a callback from Linkedin
-    if code:
-        exit()
-
     logger.info(f"Received message : {event}")
 
     # Aggregate news items from all feeds
@@ -215,6 +198,17 @@ def lambda_handler(event, context):
         return
 
     logger.info("Finished processing all feeds")
+
     post_to_social_media(aggregated_news_items)
 
     logger.info("End of script")
+
+    return {
+        "statusCode": 200,  # HTTP status code
+        "body": "Success",  # The response body
+        "headers": {
+            "Content-Type": "text/plain"
+        }
+    }
+
+

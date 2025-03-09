@@ -81,6 +81,8 @@ def post_to_instagram(post_text: str, image_url: str) -> None:
             method="POST"
         )
 
+        print("Successfully posted to Instagram!")
+
         return publish_resp
 
     except facebook.GraphAPIError as e:

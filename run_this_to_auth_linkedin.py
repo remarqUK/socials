@@ -30,31 +30,15 @@ def linkedin_callback():
     auth_code = request.args.get("code")
     state = request.args.get("state")
 
+    print("AUTH CODE ", auth_code)
+    print("STATE ", state)
 
-    linkedIn = LinkedInAuth()
-    x = linkedIn.handle_callback(auth_code)
+    linkedin_handle = LinkedInAuth()
+    linkedin_handle.handle_callback(auth_code)
 
-    print("X ", x)
-    exit(1);
+    print("LINKEDIN ACCESS TOKEN UPDATED ", state)
 
-    secret = get_secret(secret_name="LinkedInCredentials")
-    secrets = json.load(secret)
-
-    # Normally, you would exchange the auth_code for an access token here
-    # by making a POST request to the LinkedIn OAuth token endpoint.
-
-    # For now, we'll just print the code and state
-    print(f"Authorization Code: {auth_code}")
-    print(f"State: {state}")
-
-    # Exchange auth code for tokens
-
-
-
-    # Update token in secrets manager
-    save_tokens_to_secrets(secret_name="LinkedInCredentials", tokens=secrets)
-
-    return "LinkedIn callback received! Check your terminal output."
+    return "LinkedIn OAuth successful! You can close this window."
 
 if __name__ == "__main__":
     # Run the Flask app on localhost:5000

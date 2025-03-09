@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a96a771-de4c-41b3-96d1-436c7466859d" name="Changes" comment="Socially awkward">
-      <change afterPath="$PROJECT_DIR$/linkedin_callback_server.py" afterDir="false" />
+    <list default="true" id="3a96a771-de4c-41b3-96d1-436c7466859d" name="Changes" comment="Socially unacceptable">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/linkedin_auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/linkedin_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/BAK/news_to_social_media.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/facebook_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/facebook_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linkedin_callback_server.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_this_to_auth_linkedin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/linkedin_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/linkedin_functions.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/news_to_social_media.py" beforeDir="false" afterPath="$PROJECT_DIR$/news_to_social_media.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/x_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/x_functions.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,25 +39,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python.aws_functions.executor": "Run",
-    "Python.call_lambda.executor": "Run",
-    "Python.linkedin_auth.executor": "Run",
-    "Python.linkedin_callback_server.executor": "Run",
-    "Python.news_to_social_media.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "H:/source/repos/socials",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python.aws_functions.executor&quot;: &quot;Run&quot;,
+    &quot;Python.call_lambda.executor&quot;: &quot;Run&quot;,
+    &quot;Python.linkedin_auth.executor&quot;: &quot;Run&quot;,
+    &quot;Python.linkedin_callback_server.executor&quot;: &quot;Run&quot;,
+    &quot;Python.news_to_social_media.executor&quot;: &quot;Run&quot;,
+    &quot;Python.run_this_to_auth_linkedin.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;H:/source/repos/socials&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.lookFeel&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="H:\source\repos\socials" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.linkedin_callback_server">
+  <component name="RunManager" selected="Python.call_lambda">
     <configuration name="call_lambda" type="PythonConfigurationType" factoryName="Python" nameIsGenerated="true">
       <module name="pythonProject" />
       <option name="ENV_FILES" value="" />
@@ -72,28 +74,6 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/call_lambda.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="linkedin_callback_server" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="pythonProject" />
-      <option name="ENV_FILES" value="" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/linkedin_callback_server.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -125,9 +105,31 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="run_this_to_auth_linkedin" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="pythonProject" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="H:\source\repos\socials\run_this_to_auth_linkedin.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.linkedin_callback_server" />
+        <item itemvalue="Python.run_this_to_auth_linkedin" />
       </list>
     </recent_temporary>
   </component>
@@ -147,11 +149,32 @@
       <option name="presentableId" value="Default" />
       <updated>1736594789614</updated>
     </task>
+    <task id="LOCAL-00001" summary="Socially unacceptable">
+      <option name="closed" value="true" />
+      <created>1741206913684</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1741206913684</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+        <option value="Space.CommitStatus" />
+      </list>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Socially awkward" />
-    <option name="LAST_COMMIT_MESSAGE" value="Socially awkward" />
+    <MESSAGE value="Socially unacceptable" />
+    <option name="LAST_COMMIT_MESSAGE" value="Socially unacceptable" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -163,7 +186,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/news_to_social_media.py</url>
-          <line>156</line>
+          <line>144</line>
           <option name="timeStamp" value="28" />
         </line-breakpoint>
       </breakpoints>

@@ -38,9 +38,20 @@ class LinkedInAuth:
         self.client_id = secrets['client_id']
         self.client_secret = secrets['client_secret']
         self.redirect_uri = secrets['redirect_uri']
-        #self.access_token = secrets['access_token']
-        #self.organisation_urn = secrets['organisation_urn']
+        # self.access_token = secrets['access_token']
+        # self.organisation_urn = secrets['organisation_urn']
 
+    @staticmethod
+    def update_linkedin_credentials(secret_label: str, secret_value: str):
+
+        print("UPDATE LINKEDIN CREDENTIALS RECEIVED ", secret_label, secret_value)
+        secret = get_secret(secret_name="LinkedInCredentials")
+        secrets = json.loads(secret)
+        print("RETRIEVED SECRETS", secrets)
+        secrets[secret_label] = secret_value
+        print("NEW SECRETS", secrets)
+        save_tokens_to_secrets(secret_name="LinkedInCredentials", tokens=secrets)
+        print("CREDENTIALS SAVED", secret_label, secret_value)
 
     def get_authorization_url(self) -> str:
         params = {
@@ -52,7 +63,7 @@ class LinkedInAuth:
         }
         return f"https://www.linkedin.com/oauth/v2/authorization?{urlencode(params, quote_via=quote)}"
 
-    def handle_callback(self, code: str) -> dict:
+    def handle_callback(self, code: str) -> str:
         """Exchange authorization code for tokens."""
         token_url = 'https://www.linkedin.com/oauth/v2/accessToken'
         data = {
@@ -63,20 +74,16 @@ class LinkedInAuth:
             'redirect_uri': self.redirect_uri
         }
 
-        response = requests.post(token_url, data=data)
-        response.raise_for_status()
+        response = requests.get(token_url, data=data)
+
         token_data = response.json()
 
-        self.access_token = token_data['access_token']
-        self.refresh_token = token_data.get('refresh_token')
-        expires_in = token_data.get('expires_in', 5184000)  # Default to 60 days
-        self.token_expiry = datetime.datetime.now() + datetime.timedelta(seconds=expires_in)
+        access_token:str = token_data['access_token']
 
-        return {
-            "access_token": self.access_token,
-            "refresh_token": self.refresh_token,
-            "token_expiry": self.token_expiry.isoformat()
-        }
+        if token_data['access_token']:
+            LinkedInAuth.update_linkedin_credentials('access_token', access_token)
+
+        return access_token
 
     def is_token_valid(self) -> bool:
         """
@@ -152,78 +159,21 @@ class LinkedInAuth:
             return token_data
 
 
-def perform_initial_auth(client_id, client_secret, redirect_uri):
-    """Complete OAuth flow and return tokens."""
-    auth = LinkedInAuth(client_id, client_secret, redirect_uri)
-
-    # Get and print authorization URL
-    auth_url = auth.get_authorization_url()
-    print(f"\nPlease visit this URL to authorize the application:\n{auth_url}\n")
-
-    # Set up local server to catch the callback
-    server = HTTPServer(('localhost', 8000), CallbackHandler)
-    server.auth_code = None
-    print("Waiting for authorization...")
-    server.handle_request()
-
-    if not server.auth_code:
-        raise Exception("Authorization failed - no code received")
-
-    # Exchange code for tokens
-    try:
-        token_data = auth.handle_callback(server.auth_code)
-        print("\nAuthorization successful! Tokens received.")
-
-        # Save tokens to AWS Secrets Manager
-        secret_name = "LinkedInCredentials"
-        secrets = json.loads(get_secret(secret_name))
-        secrets.update(token_data)
-        save_tokens_to_secrets(secret_name, secrets)
-        print("Tokens saved to AWS Secrets Manager")
-
-        return token_data
-    except Exception as e:
-        print(f"Error exchanging code for tokens: {e}")
-        raise
-
 def post_to_linkedin(text: str, image_url: str, secret_name: str = "LinkedInCredentials") -> dict:
+
     """Post content to LinkedIn with automatic token refresh."""
     # Load credentials and tokens
     secrets = json.loads(get_secret(secret_name))
 
-    # Initialize auth with stored tokens
-    auth = LinkedInAuth(
-        client_id=secrets['ClientId'],
-        client_secret=secrets['ClientSecret'],
-        redirect_uri="http://localhost:8000/callback",
-        token_store=secrets
-    )
+    access_token = secrets.get('access_token')
 
-    exit(1)
-
-    # Check and refresh token if needed
-    if not auth.is_token_valid():
-        print("Refreshing LinkedIn token...")
-        try:
-            updated_tokens = auth.refresh_access_token()
-            if updated_tokens:  # Only update if we got new tokens
-                secrets.update(updated_tokens)
-                save_tokens_to_secrets(secret_name, secrets)
-                print("Token refreshed successfully!")
-            else:
-                print("Failed to refresh token.")
-                return None
-        except Exception as e:
-            print(f"Error during token refresh: {str(e)}")
-            return None
+    #print(f"Bearer: {access_token}")
 
     headers = {
-        'Authorization': f'Bearer {auth.access_token}',
+        'Authorization': f'Bearer {access_token}',
         'Content-Type': 'application/json',
         'X-Restli-Protocol-Version': '2.0.0'
     }
-
-    print(f"Bearer: {auth.access_token}")
 
     try:
         # Get user profile ID
@@ -231,6 +181,11 @@ def post_to_linkedin(text: str, image_url: str, secret_name: str = "LinkedInCred
             "https://api.linkedin.com/v2/userinfo",
             headers=headers
         )
+
+        #print("PROFILE RESPONSE ", profile_response.json())
+
+        exit(1)
+
         profile_response.raise_for_status()
         author = f"urn:li:organization:104956250"
 
